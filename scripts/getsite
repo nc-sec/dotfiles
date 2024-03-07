@@ -1,0 +1,21 @@
+#!/bin/bash
+set -Eeuo pipefail
+trap "echo -e \"\033[1;31m[!] \e[0mScript error occured in $0.\"" ERR
+
+if [ $# == 0 ] ; then
+    echo "Usage: getsite [URL]"
+    exit 1;
+fi
+
+DOMAIN=$(echo "$1" | awk -F[/:] '{print $4}')
+
+wget                              \
+    --recursive                   \
+    --no-clobber                  \
+    --page-requisites             \
+    --html-extension              \
+    --convert-links               \
+    --restrict-file-names=windows \
+    --domains "$DOMAIN"           \
+    --no-parent                   \
+    "$1"
